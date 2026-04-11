@@ -29,6 +29,17 @@ export const typeDefs = `#graphql
     updatedAt: String!
   }
 
+  # ── Pagination ─────────────────────────────────────────────────────────────
+
+  type PageInfo {
+    page: Int!
+    limit: Int!
+    totalItems: Int!
+    totalPages: Int!
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+  }
+
   # ── Author ─────────────────────────────────────────────────────────────────
 
   type Author {
@@ -38,12 +49,14 @@ export const typeDefs = `#graphql
     birthDate: String
     deathDate: String
     nationality: String
+    books: [Book!]!
     createdAt: String!
     updatedAt: String!
   }
 
   type AuthorConnection {
     items: [Author!]!
+    pageInfo: PageInfo!
   }
 
   input CreateAuthorInput {
@@ -71,5 +84,69 @@ export const typeDefs = `#graphql
     createAuthor(input: CreateAuthorInput!): Author!
     updateAuthor(id: ID!, input: UpdateAuthorInput!): Author!
     deleteAuthor(id: ID!): Boolean!
+  }
+
+  # ── Book ───────────────────────────────────────────────────────────────────
+
+  type Book {
+    id: ID!
+    title: String!
+    isbn: String
+    description: String
+    publishedYear: Int
+    genres: [String!]!
+    authors: [Author!]!
+    averageRating: Float!
+    ratingsCount: Int!
+    availableCopies: Int!
+    totalCopies: Int!
+    createdAt: String!
+    updatedAt: String!
+  }
+
+  type BookConnection {
+    items: [Book!]!
+    pageInfo: PageInfo!
+  }
+
+  input CreateBookInput {
+    title: String!
+    isbn: String
+    description: String
+    publishedYear: Int
+    genres: [String!]!
+    authorIds: [ID!]!
+    totalCopies: Int!
+    availableCopies: Int
+  }
+
+  input UpdateBookInput {
+    title: String
+    isbn: String
+    description: String
+    publishedYear: Int
+    genres: [String!]
+    authorIds: [ID!]
+    totalCopies: Int
+    availableCopies: Int
+  }
+
+  extend type Query {
+    books(
+      search: String
+      genre: String
+      authorId: ID
+      minRating: Float
+      availableOnly: Boolean
+      page: Int = 1
+      limit: Int = 10
+    ): BookConnection!
+    book(id: ID!): Book
+  }
+
+  extend type Mutation {
+    createBook(input: CreateBookInput!): Book!
+    updateBook(id: ID!, input: UpdateBookInput!): Book!
+    deleteBook(id: ID!): Boolean!
   }
 `;
