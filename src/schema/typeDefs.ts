@@ -25,6 +25,7 @@ export const typeDefs = `#graphql
     email: String!
     role: String!
     active: Boolean!
+    loans(page: Int = 1, limit: Int = 10): LoanConnection!
     createdAt: String!
     updatedAt: String!
   }
@@ -38,6 +39,41 @@ export const typeDefs = `#graphql
     totalPages: Int!
     hasNextPage: Boolean!
     hasPreviousPage: Boolean!
+  }
+
+  # ── Loan ──────────────────────────────────────────────────────────────────
+
+  enum LoanStatus {
+    ACTIVE
+    RETURNED
+    LATE
+  }
+
+  type Loan {
+    id: ID!
+    user: User!
+    book: Book!
+    loanDate: String!
+    dueDate: String!
+    returnDate: String
+    status: LoanStatus!
+    createdAt: String!
+    updatedAt: String!
+  }
+
+  type LoanConnection {
+    items: [Loan!]!
+    pageInfo: PageInfo!
+  }
+
+  extend type Query {
+    myLoans(status: LoanStatus, page: Int = 1, limit: Int = 10): LoanConnection!
+    allLoans(status: LoanStatus, page: Int = 1, limit: Int = 10): LoanConnection!
+  }
+
+  extend type Mutation {
+    createLoan(bookId: ID!, dueDate: String!): Loan!
+    returnLoan(loanId: ID!): Loan!
   }
 
   # ── Author ─────────────────────────────────────────────────────────────────

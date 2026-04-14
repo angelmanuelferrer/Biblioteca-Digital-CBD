@@ -8,6 +8,7 @@ import { typeDefs } from './schema/typeDefs';
 import { resolvers } from './resolvers';
 import { Context } from './types/context';
 import { buildContext } from './middleware/auth';
+import { checkLateLoans } from './utils/checkLateLoans';
 
 dotenv.config();
 
@@ -24,6 +25,8 @@ async function main(): Promise<void> {
 
   await mongoose.connect(MONGODB_URI);
   console.log('Connected to MongoDB');
+
+  await checkLateLoans();
 
   const app = express();
 
