@@ -25,6 +25,7 @@ export const typeDefs = `#graphql
     email: String!
     role: String!
     active: Boolean!
+    reviews(page: Int = 1, limit: Int = 10): ReviewConnection!
     loans(page: Int = 1, limit: Int = 10): LoanConnection!
     createdAt: String!
     updatedAt: String!
@@ -76,50 +77,42 @@ export const typeDefs = `#graphql
     returnLoan(loanId: ID!): Loan!
   }
 
-  # ── Author ─────────────────────────────────────────────────────────────────
+  # ── Review ────────────────────────────────────────────────────────────────
 
-  type Author {
+  type Review {
     id: ID!
-    name: String!
-    bio: String
-    birthDate: String
-    deathDate: String
-    nationality: String
-    books: [Book!]!
+    user: User!
+    book: Book!
+    rating: Int!
+    comment: String
     createdAt: String!
     updatedAt: String!
   }
 
-  type AuthorConnection {
-    items: [Author!]!
+  type ReviewConnection {
+    items: [Review!]!
     pageInfo: PageInfo!
   }
 
-  input CreateAuthorInput {
-    name: String!
-    bio: String
-    birthDate: String
-    deathDate: String
-    nationality: String
+  input CreateReviewInput {
+    bookId: ID!
+    rating: Int!
+    comment: String
   }
 
-  input UpdateAuthorInput {
-    name: String
-    bio: String
-    birthDate: String
-    deathDate: String
-    nationality: String
+  input UpdateReviewInput {
+    rating: Int
+    comment: String
   }
 
   extend type Query {
-    authors(search: String, page: Int = 1, limit: Int = 10): AuthorConnection!
-    author(id: ID!): Author
+    myReviews(page: Int = 1, limit: Int = 10): ReviewConnection!
   }
 
   extend type Mutation {
-    createAuthor(input: CreateAuthorInput!): Author!
-    updateAuthor(id: ID!, input: UpdateAuthorInput!): Author!
-    deleteAuthor(id: ID!): Boolean!
+    createReview(input: CreateReviewInput!): Review!
+    updateReview(id: ID!, input: UpdateReviewInput!): Review!
+    deleteReview(id: ID!): Boolean!
   }
 
   # ── Book ───────────────────────────────────────────────────────────────────
@@ -136,6 +129,7 @@ export const typeDefs = `#graphql
     ratingsCount: Int!
     availableCopies: Int!
     totalCopies: Int!
+    reviews(page: Int = 1, limit: Int = 10): ReviewConnection!
     createdAt: String!
     updatedAt: String!
   }
@@ -184,5 +178,51 @@ export const typeDefs = `#graphql
     createBook(input: CreateBookInput!): Book!
     updateBook(id: ID!, input: UpdateBookInput!): Book!
     deleteBook(id: ID!): Boolean!
+  }
+
+  # ── Author ─────────────────────────────────────────────────────────────────
+
+  type Author {
+    id: ID!
+    name: String!
+    bio: String
+    birthDate: String
+    deathDate: String
+    nationality: String
+    books: [Book!]!
+    createdAt: String!
+    updatedAt: String!
+  }
+
+  type AuthorConnection {
+    items: [Author!]!
+    pageInfo: PageInfo!
+  }
+
+  input CreateAuthorInput {
+    name: String!
+    bio: String
+    birthDate: String
+    deathDate: String
+    nationality: String
+  }
+
+  input UpdateAuthorInput {
+    name: String
+    bio: String
+    birthDate: String
+    deathDate: String
+    nationality: String
+  }
+
+  extend type Query {
+    authors(search: String, page: Int = 1, limit: Int = 10): AuthorConnection!
+    author(id: ID!): Author
+  }
+
+  extend type Mutation {
+    createAuthor(input: CreateAuthorInput!): Author!
+    updateAuthor(id: ID!, input: UpdateAuthorInput!): Author!
+    deleteAuthor(id: ID!): Boolean!
   }
 `;
