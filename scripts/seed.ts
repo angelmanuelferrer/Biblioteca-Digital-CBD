@@ -1,7 +1,9 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 import Author from '../src/models/Author';
 import Book from '../src/models/Book';
+import User from '../src/models/User';
 
 dotenv.config();
 
@@ -66,6 +68,13 @@ const SUBJECTS = [
   'computer_architecture',
 ];
 
+const TEST_USERS = [
+  { name: 'Admin ETSII',      email: 'admin@etsii.us.es',          password: 'Admin1234!', role: 'ADMIN' as const },
+  { name: 'Juan García',      email: 'juan.garcia@alum.us.es',     password: 'User1234!',  role: 'USER'  as const },
+  { name: 'María López',      email: 'maria.lopez@alum.us.es',     password: 'User1234!',  role: 'USER'  as const },
+  { name: 'Carlos Martínez',  email: 'carlos.martinez@alum.us.es', password: 'User1234!',  role: 'USER'  as const },
+];
+
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 async function seed() {
@@ -75,7 +84,7 @@ async function seed() {
   await mongoose.connect(uri);
   console.log('Conectado a MongoDB\n');
 
-  await Promise.all([Author.deleteMany({}), Book.deleteMany({})]);
+  await Promise.all([Author.deleteMany({}), Book.deleteMany({}), User.deleteMany({})]);
   console.log('Colecciones limpiadas\n');
 
   // ── 1. Fetch works from Open Library ────────────────────────────────────────
@@ -90,7 +99,7 @@ async function seed() {
       for (const w of data.works) workMap.set(w.key, w);
     }
     process.stdout.write(`  ${subject}: ${data?.works?.length ?? 0} obras\n`);
-    await sleep(300);
+    await sleep(300); // be polite to the API
   }
 
   const works = Array.from(workMap.values()).slice(0, 200);
@@ -160,7 +169,25 @@ async function seed() {
   }
 
   console.log(`  ${bookCount} libros insertados\n`);
-  console.log('Seed completado.');
+
+  // ── 4. Create users ──────────────────────────────────────────────────────────
+  console.log('Creando usuarios...');
+
+  for (const { password, ...rest } of TEST_USERS) {
+    await User.create({ ...rest, passwordHash: await bcrypt.hash(password, 10) });
+  }
+
+  // ── 5. Summary ───────────────────────────────────────────────────────────────
+  console.log('\n══════════════════════════════════════');
+  console.log('  Seed completado');
+  console.log('══════════════════════════════════════');
+  console.log(`  Autores : ${authorCount}`);
+  console.log(`  Libros  : ${bookCount}`);
+  console.log(`  Usuarios: ${TEST_USERS.length}`);
+  console.log('\n  Credenciales:');
+  for (const u of TEST_USERS) {
+    console.log(`    [${u.role.padEnd(5)}] ${u.email}  /  ${u.password}`);
+  }
 
   await mongoose.disconnect();
 }
