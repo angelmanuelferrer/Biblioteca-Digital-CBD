@@ -172,6 +172,7 @@ export const typeDefs = `#graphql
       limit: Int = 10
     ): BookConnection!
     book(id: ID!): Book
+    genres: [String!]!
   }
 
   extend type Mutation {

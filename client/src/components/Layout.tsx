@@ -1,5 +1,5 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { BookOpen, LogOut } from 'lucide-react';
+import { BookOpen, LogOut, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { clearAuth, getUser, isAuthed } from '@/store/auth';
@@ -35,6 +35,11 @@ export function Layout() {
                 <Link to="/my-reviews" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Mis Reseñas
                 </Link>
+                {user?.role === 'ADMIN' && (
+                  <Link to="/admin/books" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+                    <ShieldCheck className="h-3.5 w-3.5" /> Admin
+                  </Link>
+                )}
               </>
             )}
           </nav>
