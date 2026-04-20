@@ -152,5 +152,3 @@ export const loanResolvers = {
   Mutation,
   Loan: Loan_,
 };
-
-// TODO: verify availableCopies sync on concurrent create/return operations
