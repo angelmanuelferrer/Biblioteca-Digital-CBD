@@ -155,5 +155,3 @@ export const bookResolvers = {
   Mutation,
   Book: Book_,
 };
-
-// TODO: handle empty search result edge case in books query
