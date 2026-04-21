@@ -2,7 +2,7 @@ import Loan from '../models/Loan';
 
 export async function checkLateLoans(): Promise<void> {
   const result = await Loan.updateMany(
-    { status: 'ACTIVE', dueDate: { $lte: new Date() } },
+    { status: 'ACTIVE', dueDate: { $lt: new Date() } },
     { $set: { status: 'LATE' } }
   );
 
