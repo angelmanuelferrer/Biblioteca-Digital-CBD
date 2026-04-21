@@ -1,0 +1,229 @@
+export const typeDefs = `#graphql
+
+  # ── Base queries / mutations (extended below) ──────────────────────────────
+
+  type Query {
+    health: String
+    me: User
+  }
+
+  type Mutation {
+    register(name: String!, email: String!, password: String!): AuthPayload!
+    login(email: String!, password: String!): AuthPayload!
+  }
+
+  # ── Auth ───────────────────────────────────────────────────────────────────
+
+  type AuthPayload {
+    token: String!
+    user: User!
+  }
+
+  type User {
+    id: ID!
+    name: String!
+    email: String!
+    role: String!
+    active: Boolean!
+    reviews(page: Int = 1, limit: Int = 10): ReviewConnection!
+    loans(page: Int = 1, limit: Int = 10): LoanConnection!
+    createdAt: String!
+    updatedAt: String!
+  }
+
+  # ── Pagination ─────────────────────────────────────────────────────────────
+
+  type PageInfo {
+    page: Int!
+    limit: Int!
+    totalItems: Int!
+    totalPages: Int!
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+  }
+
+  # ── Loan ──────────────────────────────────────────────────────────────────
+
+  enum LoanStatus {
+    ACTIVE
+    RETURNED
+    LATE
+  }
+
+  type Loan {
+    id: ID!
+    user: User!
+    book: Book!
+    loanDate: String!
+    dueDate: String!
+    returnDate: String
+    status: LoanStatus!
+    createdAt: String!
+    updatedAt: String!
+  }
+
+  type LoanConnection {
+    items: [Loan!]!
+    pageInfo: PageInfo!
+  }
+
+  extend type Query {
+    myLoans(status: LoanStatus, page: Int = 1, limit: Int = 10): LoanConnection!
+    allLoans(status: LoanStatus, page: Int = 1, limit: Int = 10): LoanConnection!
+  }
+
+  extend type Mutation {
+    createLoan(bookId: ID!, dueDate: String!): Loan!
+    returnLoan(loanId: ID!): Loan!
+  }
+
+  # ── Review ────────────────────────────────────────────────────────────────
+
+  type Review {
+    id: ID!
+    user: User!
+    book: Book!
+    rating: Int!
+    comment: String
+    createdAt: String!
+    updatedAt: String!
+  }
+
+  type ReviewConnection {
+    items: [Review!]!
+    pageInfo: PageInfo!
+  }
+
+  input CreateReviewInput {
+    bookId: ID!
+    rating: Int!
+    comment: String
+  }
+
+  input UpdateReviewInput {
+    rating: Int
+    comment: String
+  }
+
+  extend type Query {
+    myReviews(page: Int = 1, limit: Int = 10): ReviewConnection!
+  }
+
+  extend type Mutation {
+    createReview(input: CreateReviewInput!): Review!
+    updateReview(id: ID!, input: UpdateReviewInput!): Review!
+    deleteReview(id: ID!): Boolean!
+  }
+
+  # ── Book ───────────────────────────────────────────────────────────────────
+
+  type Book {
+    id: ID!
+    title: String!
+    isbn: String
+    description: String
+    publishedYear: Int
+    genres: [String!]!
+    authors: [Author!]!
+    averageRating: Float!
+    ratingsCount: Int!
+    availableCopies: Int!
+    totalCopies: Int!
+    reviews(page: Int = 1, limit: Int = 10): ReviewConnection!
+    createdAt: String!
+    updatedAt: String!
+  }
+
+  type BookConnection {
+    items: [Book!]!
+    pageInfo: PageInfo!
+  }
+
+  input CreateBookInput {
+    title: String!
+    isbn: String
+    description: String
+    publishedYear: Int
+    genres: [String!]!
+    authorIds: [ID!]!
+    totalCopies: Int!
+    availableCopies: Int
+  }
+
+  input UpdateBookInput {
+    title: String
+    isbn: String
+    description: String
+    publishedYear: Int
+    genres: [String!]
+    authorIds: [ID!]
+    totalCopies: Int
+    availableCopies: Int
+  }
+
+  extend type Query {
+    books(
+      search: String
+      genre: String
+      authorId: ID
+      minRating: Float
+      availableOnly: Boolean
+      page: Int = 1
+      limit: Int = 10
+    ): BookConnection!
+    book(id: ID!): Book
+    genres: [String!]!
+  }
+
+  extend type Mutation {
+    createBook(input: CreateBookInput!): Book!
+    updateBook(id: ID!, input: UpdateBookInput!): Book!
+    deleteBook(id: ID!): Boolean!
+  }
+
+  # ── Author ─────────────────────────────────────────────────────────────────
+
+  type Author {
+    id: ID!
+    name: String!
+    bio: String
+    birthDate: String
+    deathDate: String
+    nationality: String
+    books: [Book!]!
+    createdAt: String!
+    updatedAt: String!
+  }
+
+  type AuthorConnection {
+    items: [Author!]!
+    pageInfo: PageInfo!
+  }
+
+  input CreateAuthorInput {
+    name: String!
+    bio: String
+    birthDate: String
+    deathDate: String
+    nationality: String
+  }
+
+  input UpdateAuthorInput {
+    name: String
+    bio: String
+    birthDate: String
+    deathDate: String
+    nationality: String
+  }
+
+  extend type Query {
+    authors(search: String, page: Int = 1, limit: Int = 10): AuthorConnection!
+    author(id: ID!): Author
+  }
+
+  extend type Mutation {
+    createAuthor(input: CreateAuthorInput!): Author!
+    updateAuthor(id: ID!, input: UpdateAuthorInput!): Author!
+    deleteAuthor(id: ID!): Boolean!
+  }
+`;
