@@ -26,16 +26,29 @@ PORT=4000
 ## Instalación y arranque
 
 ```bash
-# Instalar dependencias
+# Instalar dependencias del servidor
 npm install
 
 # Copiar variables de entorno
 cp .env.example .env
 
-# Desarrollo (hot reload)
+# Desarrollo del servidor (hot reload)
 npm run dev
+```
 
-# Producción
+En otra terminal, arrancar el cliente:
+
+```bash
+cd client
+npm install
+npm run dev
+```
+
+El cliente estará disponible en `http://localhost:5173`.
+
+Para producción:
+
+```bash
 npm run build
 npm start
 ```
