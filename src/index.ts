@@ -1,5 +1,6 @@
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
@@ -31,14 +32,18 @@ async function main(): Promise<void> {
 
   const app = express();
 
-  const server = new ApolloServer<Context>({ typeDefs, resolvers });
+  const server = new ApolloServer<Context>({
+    typeDefs,
+    resolvers,
+    plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
+  });
   await server.start();
 
   app.use(
     '/graphql',
     cors<cors.CorsRequest>({
       origin: process.env.NODE_ENV === 'production'
-        ? process.env.CLIENT_ORIGIN
+        ? [process.env.CLIENT_ORIGIN ?? '', 'https://sandbox.apollo.dev'].filter(Boolean)
         : '*',
       credentials: true,
     }),
