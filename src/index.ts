@@ -35,6 +35,7 @@ async function main(): Promise<void> {
   const server = new ApolloServer<Context>({
     typeDefs,
     resolvers,
+    introspection: true,
     plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
   });
   await server.start();
