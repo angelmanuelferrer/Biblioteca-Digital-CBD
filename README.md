@@ -2,6 +2,12 @@
 
 API GraphQL para gestión de una biblioteca digital: autores, libros, préstamos y reseñas.
 
+## Aplicación desplegada
+
+La aplicación está desplegada en [Render](https://biblioteca-digital-cbd.onrender.com/) y es accesible públicamente. El endpoint GraphQL está en `https://biblioteca-digital-cbd.onrender.com/graphql`, donde también está disponible el Apollo Sandbox.
+
+> **Nota:** al estar en el plan gratuito de Render, el servidor puede tardar unos segundos en responder si lleva inactivo un tiempo (*cold start*).
+
 ## Requisitos
 
 - Node.js 18+
