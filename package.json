@@ -4,7 +4,7 @@
   "description": "GraphQL API with Apollo Server v4, Express, Mongoose and TypeScript",
   "main": "dist/index.js",
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "scripts": {
     "dev": "nodemon src/index.ts",
