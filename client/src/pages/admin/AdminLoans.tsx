@@ -33,7 +33,7 @@ export function AdminLoans() {
   const [status, setStatus] = useState<string>('');
   const [page, setPage] = useState(1);
 
-  const { data, isLoading } = useAllLoans(status || undefined, page);
+  const { data, isLoading, isError, error } = useAllLoans(status, page);
 
   const handleStatus = (val: string) => { setStatus(val === 'TODOS' ? '' : val); setPage(1); };
 
@@ -66,6 +66,11 @@ export function AdminLoans() {
 
       {isLoading ? (
         <div className="space-y-2">{Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="h-10 w-full" />)}</div>
+      ) : isError ? (
+        <div className="py-6 text-center space-y-1">
+          <p className="text-destructive text-sm font-medium">Error al cargar los préstamos</p>
+          <p className="text-muted-foreground text-xs font-mono">{(error as Error)?.message ?? 'Error desconocido'}</p>
+        </div>
       ) : (
         <div className="overflow-x-auto rounded-md border">
           <table className="w-full text-sm">
@@ -83,10 +88,10 @@ export function AdminLoans() {
               {data?.items.map((loan) => (
                 <tr key={loan.id} className="border-t hover:bg-muted/30 transition-colors">
                   <td className="px-3 py-2">
-                    <div className="font-medium">{loan.user.name}</div>
-                    <div className="text-muted-foreground text-xs">{loan.user.email}</div>
+                    <div className="font-medium">{loan.user?.name ?? <span className="italic text-muted-foreground">Usuario eliminado</span>}</div>
+                    <div className="text-muted-foreground text-xs">{loan.user?.email ?? '—'}</div>
                   </td>
-                  <td className="px-3 py-2 max-w-[200px] truncate">{loan.book.title}</td>
+                  <td className="px-3 py-2 max-w-[200px] truncate">{loan.book?.title ?? <span className="italic text-muted-foreground">Libro eliminado</span>}</td>
                   <td className="px-3 py-2 text-muted-foreground whitespace-nowrap">{formatDate(loan.loanDate)}</td>
                   <td className="px-3 py-2 text-muted-foreground whitespace-nowrap">{formatDate(loan.dueDate)}</td>
                   <td className="px-3 py-2 text-muted-foreground whitespace-nowrap">

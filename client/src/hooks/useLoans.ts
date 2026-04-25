@@ -47,7 +47,8 @@ export function useCreateLoan() {
       gqlClient.request<{ createLoan: Loan }>(CREATE_LOAN, vars).then((d) => d.createLoan),
     onSuccess: (data) => {
       void qc.invalidateQueries({ queryKey: ['myLoans'] });
-      void qc.invalidateQueries({ queryKey: ['book', data.book.id] });
+      void qc.invalidateQueries({ queryKey: ['allLoans'] });
+      if (data.book) void qc.invalidateQueries({ queryKey: ['book', data.book.id] });
     },
   });
 }
@@ -59,7 +60,8 @@ export function useReturnLoan() {
       gqlClient.request<{ returnLoan: Loan }>(RETURN_LOAN, vars).then((d) => d.returnLoan),
     onSuccess: (data) => {
       void qc.invalidateQueries({ queryKey: ['myLoans'] });
-      void qc.invalidateQueries({ queryKey: ['book', data.book.id] });
+      void qc.invalidateQueries({ queryKey: ['allLoans'] });
+      if (data.book) void qc.invalidateQueries({ queryKey: ['book', data.book.id] });
     },
   });
 }

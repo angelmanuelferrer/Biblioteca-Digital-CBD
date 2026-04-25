@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import Author from '../src/models/Author';
 import Book from '../src/models/Book';
 import User from '../src/models/User';
+import Loan from '../src/models/Loan';
+import Review from '../src/models/Review';
 
 dotenv.config();
 
@@ -84,7 +86,7 @@ async function seed() {
   await mongoose.connect(uri);
   console.log('Conectado a MongoDB\n');
 
-  await Promise.all([Author.deleteMany({}), Book.deleteMany({}), User.deleteMany({})]);
+  await Promise.all([Author.deleteMany({}), Book.deleteMany({}), User.deleteMany({}), Loan.deleteMany({}), Review.deleteMany({})]);
   console.log('Colecciones limpiadas\n');
 
   // ── 1. Fetch works from Open Library ────────────────────────────────────────

@@ -68,7 +68,7 @@ const DELETE_AUTHOR = `
 
 // ─── Hook exports ─────────────────────────────────────────────────────────────
 
-export function useAllLoans(status?: string, page = 1) {
+export function useAllLoans(status = '', page = 1) {
   return useQuery({
     queryKey: ['allLoans', status, page],
     queryFn: () =>

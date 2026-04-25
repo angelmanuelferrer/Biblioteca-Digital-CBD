@@ -58,8 +58,8 @@ export type LoanStatus = 'ACTIVE' | 'RETURNED' | 'LATE';
 
 export interface Loan {
   id: string;
-  user: User;
-  book: Book;
+  user: User | null;
+  book: Book | null;
   loanDate: string;
   dueDate: string;
   returnDate?: string;

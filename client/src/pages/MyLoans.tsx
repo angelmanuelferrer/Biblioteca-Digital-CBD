@@ -63,7 +63,7 @@ export function MyLoans() {
             <tbody>
               {data?.items.map((loan) => (
                 <tr key={loan.id} className="border-b last:border-0 hover:bg-muted/25">
-                  <td className="px-4 py-3 font-medium max-w-[200px] truncate">{loan.book.title}</td>
+                  <td className="px-4 py-3 font-medium max-w-[200px] truncate">{loan.book?.title ?? 'Libro eliminado'}</td>
                   <td className="px-4 py-3 text-muted-foreground">{fmt(loan.loanDate)}</td>
                   <td className="px-4 py-3 text-muted-foreground">{fmt(loan.dueDate)}</td>
                   <td className="px-4 py-3 text-muted-foreground">{loan.returnDate ? fmt(loan.returnDate) : '—'}</td>
@@ -90,7 +90,7 @@ export function MyLoans() {
             <DialogTitle>¿Devolver libro?</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
-            Devolverás <strong>{confirmLoan?.book.title}</strong>. Esta acción no se puede deshacer.
+            Devolverás <strong>{confirmLoan?.book?.title ?? 'este libro'}</strong>. Esta acción no se puede deshacer.
           </p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setConfirmLoan(null)}>Cancelar</Button>

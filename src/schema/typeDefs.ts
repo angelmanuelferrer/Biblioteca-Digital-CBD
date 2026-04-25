@@ -52,8 +52,8 @@ export const typeDefs = `#graphql
 
   type Loan {
     id: ID!
-    user: User!
-    book: Book!
+    user: User
+    book: Book
     loanDate: String!
     dueDate: String!
     returnDate: String
