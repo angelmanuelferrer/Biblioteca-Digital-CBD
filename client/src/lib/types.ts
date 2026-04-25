@@ -35,6 +35,7 @@ export interface Book {
   totalCopies: number;
   createdAt: string;
   updatedAt: string;
+  reviews?: Connection<ReviewSummary>;
 }
 
 export interface User {
@@ -42,6 +43,15 @@ export interface User {
   name: string;
   email: string;
   role: string;
+}
+
+export interface ReviewSummary {
+  id: string;
+  user: User;
+  rating: number;
+  comment?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Review {
