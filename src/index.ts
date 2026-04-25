@@ -2,6 +2,7 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { typeDefs } from './schema/typeDefs';
@@ -35,15 +36,27 @@ async function main(): Promise<void> {
 
   app.use(
     '/graphql',
-    cors<cors.CorsRequest>(),
+    cors<cors.CorsRequest>({
+      origin: process.env.NODE_ENV === 'production'
+        ? process.env.CLIENT_ORIGIN
+        : '*',
+      credentials: true,
+    }),
     express.json(),
     expressMiddleware(server, { context: buildContext })
   );
 
+  app.get('/health', (_req, res) => res.sendStatus(200));
+
+  const clientDist = path.join(__dirname, '..', 'client', 'dist');
+  app.use(express.static(clientDist));
+  app.get('*', (_req, res) => {
+    res.sendFile(path.join(clientDist, 'index.html'));
+  });
+
   const PORT = parseInt(process.env.PORT ?? '4000', 10);
   app.listen(PORT, () => {
     console.log(`Server ready at http://localhost:${PORT}/graphql`);
-    console.log(`Apollo Sandbox available at http://localhost:${PORT}/graphql`);
   });
 }
 

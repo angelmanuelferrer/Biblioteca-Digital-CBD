@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "GraphQL API with Apollo Server v4, Express, Mongoose and TypeScript",
   "main": "dist/index.js",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "build": "tsc",
+    "build": "cd client && npm install && npm run build && cd .. && tsc",
     "start": "node dist/index.js",
     "seed": "ts-node -P scripts/tsconfig.json scripts/seed.ts"
   },
