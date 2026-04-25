@@ -85,7 +85,7 @@ export function BookDetail() {
               {book.availableCopies > 0 ? `${book.availableCopies} copias disponibles` : 'Sin copias disponibles'}
             </Badge>
             {authed && book.availableCopies > 0 && (
-              <Button className="w-full" onClick={() => setLoanOpen(true)}>
+              <Button className="w-full" onClick={() => { setLoanOpen(true); createLoan.reset(); setDueDate(''); }}>
                 Pedir prestado
               </Button>
             )}
@@ -190,7 +190,9 @@ export function BookDetail() {
             />
           </div>
           {createLoan.error && (
-            <p className="text-sm text-destructive">{(createLoan.error as Error).message}</p>
+            <p className="text-sm text-destructive">
+              La fecha de devolución debe ser igual o posterior a hoy.
+            </p>
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setLoanOpen(false)}>Cancelar</Button>
